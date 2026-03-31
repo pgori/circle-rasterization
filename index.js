@@ -1,7 +1,7 @@
 // create the image data
-const imageWidth = 20;
-const imageHeight = 10;
-const imageData = createImageData();
+var imageWidth = 0;
+var imageHeight = 0;
+var imageData = createImageData();
 /**
  * Gets if the provided point is in the image.
  * @param x - The horizontal position within
@@ -19,9 +19,11 @@ function isPointInImage(x, y) {
  * @param offChar - Character to render an
  * "off" pixel with.
  */
-function outputImage(onChar = "X", offChar = " ") {
-    let text = "";
-    for (let i = 0; i < imageData.length; i++) {
+function outputImage(onChar, offChar) {
+    if (onChar === void 0) { onChar = "X"; }
+    if (offChar === void 0) { offChar = " "; }
+    var text = "";
+    for (var i = 0; i < imageData.length; i++) {
         if (i > 0 && i % imageWidth === 0) {
             text += "\n"; // new line
         }
@@ -51,7 +53,7 @@ function outputImage(onChar = "X", offChar = " ") {
  */
 function createImageData() {
     // create array of size `length` containing `false` values
-    const length = imageWidth * imageHeight;
+    var length = imageWidth * imageHeight;
     return new Array(length).fill(false);
 }
 /**
@@ -86,10 +88,10 @@ function drawCircle(x, y, radius) {
   |(x - cx)² + (y - cy)² - r²| ≤ 1.0
 */
 function drawFirstQuadrant(cx, cy, radius) {
-    let x = cx;
-    let y = cy;
-    for (let i = 0; i <= radius; i++) {
-        for (let j = 0; j <= radius; j++) {
+    var x = cx;
+    var y = cy;
+    for (var i = 0; i <= radius; i++) {
+        for (var j = 0; j <= radius; j++) {
             if (Math.abs((x - cx) * (x - cx) + (y - cy) * (y - cy) - radius * radius) <= 1) {
                 drawDot(x, y);
             }
@@ -100,10 +102,10 @@ function drawFirstQuadrant(cx, cy, radius) {
     }
 }
 function drawSecondQuadrant(cx, cy, radius) {
-    let x = cx;
-    let y = cy;
-    for (let i = 0; i <= radius; i++) {
-        for (let j = 0; j <= radius; j++) {
+    var x = cx;
+    var y = cy;
+    for (var i = 0; i <= radius; i++) {
+        for (var j = 0; j <= radius; j++) {
             if (Math.abs((x - cx) * (x - cx) + (y - cy) * (y - cy) - radius * radius) <= 1) {
                 drawDot(x, y);
             }
@@ -114,10 +116,10 @@ function drawSecondQuadrant(cx, cy, radius) {
     }
 }
 function drawThirdQuadrant(cx, cy, radius) {
-    let x = cx;
-    let y = cy;
-    for (let i = 0; i <= radius; i++) {
-        for (let j = 0; j <= radius; j++) {
+    var x = cx;
+    var y = cy;
+    for (var i = 0; i <= radius; i++) {
+        for (var j = 0; j <= radius; j++) {
             if (Math.abs((x - cx) * (x - cx) + (y - cy) * (y - cy) - radius * radius) <= 1) {
                 drawDot(x, y);
             }
@@ -128,10 +130,10 @@ function drawThirdQuadrant(cx, cy, radius) {
     }
 }
 function drawFourthQuadrant(cx, cy, radius) {
-    let x = cx;
-    let y = cy;
-    for (let i = 0; i <= radius; i++) {
-        for (let j = 0; j <= radius; j++) {
+    var x = cx;
+    var y = cy;
+    for (var i = 0; i <= radius; i++) {
+        for (var j = 0; j <= radius; j++) {
             if (Math.abs((x - cx) * (x - cx) + (y - cy) * (y - cy) - radius * radius) <= 1) {
                 drawDot(x, y);
             }
@@ -141,5 +143,28 @@ function drawFourthQuadrant(cx, cy, radius) {
         y++;
     }
 }
-drawCircle(4, 4, 3);
-outputImage();
+function main() {
+    var args = process.argv.slice(2);
+    if (args.length !== 3) {
+        console.log('Usage: node index.js <cx> <cy> <radius>');
+        process.exit(1);
+    }
+    imageWidth = Number(args[2]) * 2 + 1;
+    imageHeight = Number(args[2]) * 2 + 1;
+    var cx = Number(args[0]);
+    var cy = Number(args[1]);
+    var radius = Number(args[2]);
+    if (isNaN(cx) || isNaN(cy) || isNaN(radius)) {
+        console.log('Arguments must be valid numbers!');
+        process.exit(1);
+    }
+    console.log("\ncenter of the circle: (".concat(cx, ", ").concat(cy, ")"));
+    console.log("circle radius: ".concat(radius, "\n"));
+    var timeStart = performance.now();
+    drawCircle(cx, cy, radius);
+    var timeEnd = performance.now();
+    var timeTotal = timeEnd - timeStart;
+    outputImage();
+    console.log("\nruntime: ".concat(timeTotal.toFixed(3), "ms"));
+}
+main();

@@ -1,6 +1,6 @@
 // create the image data
-const imageWidth = 20;
-const imageHeight = 10;
+let imageWidth = 0;
+let imageHeight = 0;
 const imageData = createImageData();
 
 
@@ -156,6 +156,33 @@ function drawFourthQuadrant(cx: number, cy: number, radius: number) {
   }
 }
 
+function main() {
 
-drawCircle(4,4,3);
-outputImage();
+  const args = process.argv.slice(2);
+
+  if (args.length !== 3) {
+    console.log('Usage: node index.js <cx> <cy> <radius>');
+    process.exit(1); 
+  }
+
+  imageWidth = Number(args[2]) * 2 + 1;
+  imageHeight = Number(args[2]) * 2 + 1;
+  const cx = Number(args[0]);
+  const cy = Number(args[1]);
+  const radius = Number(args[2]);
+
+  if (isNaN(cx) || isNaN(cy) || isNaN(radius)) {
+    console.log('Arguments must be valid numbers!');
+    process.exit(1);
+  }
+  console.log(`\ncenter of the circle: (${cx}, ${cy})`);
+  console.log(`circle radius: ${radius}\n`);
+  const timeStart = performance.now();
+  drawCircle(cx,cy,radius);
+  const timeEnd = performance.now();
+  const timeTotal = timeEnd - timeStart;
+  outputImage();
+  console.log(`\nruntime: ${timeTotal.toFixed(3)}ms`);
+}
+
+main();
